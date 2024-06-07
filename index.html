@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mind the Minutes!</title>
+    <meta name="description" content="Mind the Minutes is a clock that shows the time of the day in minutes.">
+    <meta name="keywords" content="clock, time, minutes, digital clock, web clock">
+    <meta name="author" content="Your Name">
+    <link href="https://fonts.googleapis.com/css2?family=Kode+Mono&display=swap" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #121212;
+            font-family: 'Kode Mono', monospace;
+            color: #ffffff;
+            text-align: center;
+            flex-direction: column;
+        }
+        #time {
+            font-size: 40vmin; /* Font size set to 40% of the viewport's smaller dimension */
+            color: #ffffff; /* Default color is white */
+        }
+    </style>
+</head>
+<body>
+    <div id="time">0000</div>
+    <script>
+        const colors = ['#add8e6', '#90ee90', '#f08080', '#ffb6c1', '#e6e6fa', '#ffffff'];
+        
+        function updateTime() {
+            const now = new Date();
+            const minutes = now.getHours() * 60 + now.getMinutes();
+            document.getElementById('time').textContent = String(minutes).padStart(4, '0');
+        }
+
+        function getRandomColor() {
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+
+        function changeColor() {
+            const currentColor = document.getElementById('time').style.color;
+            let newColor = getRandomColor();
+            while (newColor === currentColor) {
+                newColor = getRandomColor();
+            }
+            document.getElementById('time').style.color = newColor;
+            localStorage.setItem('timeColor', newColor);
+        }
+
+        function initializeColor() {
+            const savedColor = localStorage.getItem('timeColor');
+            if (savedColor) {
+                document.getElementById('time').style.color = savedColor;
+            } else {
+                const randomColor = getRandomColor();
+                document.getElementById('time').style.color = randomColor;
+                localStorage.setItem('timeColor', randomColor);
+            }
+        }
+
+        document.body.addEventListener('click', changeColor);
+
+        setInterval(updateTime, 60000);
+        updateTime();
+        initializeColor();
+    </script>
+</body>
+</html>
