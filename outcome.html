@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mind the Minutes - Calculate the totals</title>
+    <meta name="description" content="Mind the Minutes is a clock that shows the time of the day in minutes.">
+    <meta name="keywords" content="clock, time, minutes, digital clock, web clock">
+    <meta name="author" content="Your Name">
+    <link href="https://fonts.googleapis.com/css2?family=Kode+Mono&display=swap" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            flex-direction: row;
+            height: 100vh;
+            margin: 0;
+            background-color: #121212;
+            font-family: 'Kode Mono', monospace;
+            color: #ffffff;
+        }
+        #inputArea {
+            width: 30%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        #outputArea {
+            width: 80%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 40vmin; /* Font size set to 40% of the viewport's smaller dimension */
+            color: #ffffff; /* Default color is white */
+        }
+        textarea {
+            width: 100%;
+            height: 80%;
+            font-size: 1.5em;
+            background-color: #333333;
+            color: #ffffff;
+            border: none;
+            padding: 10px;
+            box-sizing: border-box;
+            resize: none;
+            font-family: 'Kode Mono', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div id="inputArea">
+        <textarea id="inputText" placeholder="Enter your text here..."></textarea>
+    </div>
+    <div id="outputArea">
+        <div id="result"></div>
+    </div>
+    <script>
+        document.getElementById('inputText').addEventListener('input', function() {
+            const text = this.value;
+            const lines = text.split('\n');
+            let totalDifference = 0;
+            let showResult = false;
+
+            lines.forEach(line => {
+                const numbers = line.split(',').map(num => parseInt(num.trim(), 10));
+                if (numbers.length === 2 && !isNaN(numbers[0]) && !isNaN(numbers[1])) {
+                    const difference = numbers[1] - numbers[0];
+                    totalDifference += difference;
+                    showResult = true;
+                }
+            });
+
+            const resultElement = document.getElementById('result');
+            if (showResult) {
+                resultElement.textContent = totalDifference;
+            } else {
+                resultElement.textContent = '';
+            }
+        });
+    </script>
+</body>
+</html>
