@@ -44,9 +44,10 @@
 
     <script>
         const colors = ['#add8e6', '#90ee90', '#f08080', '#ffb6c1', '#e6e6fa', '#ffffff'];
-        let totalTime = 90 * 60; // 90 minutes in seconds
+        let totalTime = 0; // Start at 0 seconds
         let isRunning = false;
         let timerInterval;
+        const maxTime = 90 * 60; // 90 minutes in seconds
 
         function updateTime() {
             const minutes = Math.floor(totalTime / 60);
@@ -85,8 +86,8 @@
                 document.getElementById('playPauseBtn').textContent = 'play_arrow';
             } else {
                 timerInterval = setInterval(() => {
-                    if (totalTime > 0) {
-                        totalTime--;
+                    if (totalTime < maxTime) {
+                        totalTime++;
                         updateTime();
                     } else {
                         clearInterval(timerInterval);
@@ -99,8 +100,22 @@
             isRunning = !isRunning;
         }
 
+        function setTime() {
+            const userTime = prompt("Enter the time in MM:SS format (max 90:00)", "00:00");
+            if (userTime) {
+                const [minutes, seconds] = userTime.split(':').map(Number);
+                if (!isNaN(minutes) && !isNaN(seconds) && minutes >= 0 && minutes <= 90 && seconds >= 0 && seconds < 60) {
+                    totalTime = minutes * 60 + seconds;
+                    updateTime();
+                } else {
+                    alert("Invalid time entered. Please use the MM:SS format with valid numbers.");
+                }
+            }
+        }
+
         document.getElementById('playPauseBtn').addEventListener('click', toggleTimer);
         document.body.addEventListener('click', changeColor);
+        document.getElementById('time').addEventListener('dblclick', setTime); // Double-click to set the time
 
         updateTime();
         initializeColor();
