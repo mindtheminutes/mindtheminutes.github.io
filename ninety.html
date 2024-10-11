@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timer - Mind the Minutes!</title>
+    <meta name="description" content="Mind the Minutes is a countdown timer showing time in minutes and seconds.">
+    <meta name="keywords" content="timer, clock, time, minutes, digital timer, web timer">
+    <meta name="author" content="Your Name">
+    <link href="https://fonts.googleapis.com/css2?family=Kode+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #121212;
+            font-family: 'Kode Mono', monospace;
+            color: #ffffff;
+            text-align: center;
+            flex-direction: column;
+        }
+        #time {
+            font-size: 40vmin; /* Font size set to 40% of the viewport's smaller dimension */
+            color: #ffffff; /* Default color is white */
+        }
+        #controls {
+            margin-top: 20px;
+        }
+        .material-icons {
+            font-size: 5vmin;
+            color: #ffffff;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="time">00:00</div>
+    <div id="controls">
+        <span id="playPauseBtn" class="material-icons">play_arrow</span>
+    </div>
+
+    <script>
+        const colors = ['#add8e6', '#90ee90', '#f08080', '#ffb6c1', '#e6e6fa', '#ffffff'];
+        let totalTime = 90 * 60; // 90 minutes in seconds
+        let isRunning = false;
+        let timerInterval;
+
+        function updateTime() {
+            const minutes = Math.floor(totalTime / 60);
+            const seconds = totalTime % 60;
+            document.getElementById('time').textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+
+        function getRandomColor() {
+            return colors[Math.floor(Math.random() * colors.length)];
+        }
+
+        function changeColor() {
+            const currentColor = document.getElementById('time').style.color;
+            let newColor = getRandomColor();
+            while (newColor === currentColor) {
+                newColor = getRandomColor();
+            }
+            document.getElementById('time').style.color = newColor;
+            localStorage.setItem('timeColor', newColor);
+        }
+
+        function initializeColor() {
+            const savedColor = localStorage.getItem('timeColor');
+            if (savedColor) {
+                document.getElementById('time').style.color = savedColor;
+            } else {
+                const randomColor = getRandomColor();
+                document.getElementById('time').style.color = randomColor;
+                localStorage.setItem('timeColor', randomColor);
+            }
+        }
+
+        function toggleTimer() {
+            if (isRunning) {
+                clearInterval(timerInterval);
+                document.getElementById('playPauseBtn').textContent = 'play_arrow';
+            } else {
+                timerInterval = setInterval(() => {
+                    if (totalTime > 0) {
+                        totalTime--;
+                        updateTime();
+                    } else {
+                        clearInterval(timerInterval);
+                        isRunning = false;
+                        document.getElementById('playPauseBtn').textContent = 'play_arrow';
+                    }
+                }, 1000);
+                document.getElementById('playPauseBtn').textContent = 'pause';
+            }
+            isRunning = !isRunning;
+        }
+
+        document.getElementById('playPauseBtn').addEventListener('click', toggleTimer);
+        document.body.addEventListener('click', changeColor);
+
+        updateTime();
+        initializeColor();
+    </script>
+</body>
+</html>
